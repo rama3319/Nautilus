@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   nautilus:
   - apiVersion: v2
+    created: "2026-04-05T21:11:17.421518394Z"
+    description: Generic reusable Helm chart for deploying any web application
+    digest: cb3e228bd446f91e4d97eb19fbe52b9768f65a0b79b0ff28c918e8a275684c79
+    name: nautilus
+    type: application
+    urls:
+    - https://github.com/rama3319/Nautilus/releases/download/nautilus-0.4.0/nautilus-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
     created: "2026-04-05T21:08:37.483336076Z"
     description: Generic reusable Helm chart for deploying any web application
     digest: b51135decc53f1fe409a2bbd02400ce87ab743fef4e33ce87e0675439a9af738
@@ -19,4 +28,4 @@ entries:
     urls:
     - https://github.com/rama3319/Nautilus/releases/download/nautilus-0.2.0/nautilus-0.2.0.tgz
     version: 0.2.0
-generated: "2026-04-05T21:08:37.483344091Z"
+generated: "2026-04-05T21:11:17.421529795Z"
