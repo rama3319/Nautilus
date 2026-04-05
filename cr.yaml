@@ -2,3 +2,4 @@ owner: rama3319
 repo: Nautilus
 git-base-url: https://github.com/
 pages-branch: gh-pages
+skip-existing: true
