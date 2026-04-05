@@ -1,0 +1,42 @@
+# Nautilus values schema — override all fields in your app's values.yaml
+
+app:
+  name: ""             # required: name of your app
+
+image:
+  repository: ""       # required: e.g. nginx, my-org/my-api
+  tag: ""              # required: e.g. "1.27", "latest"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+containerPort: 80      # port your container listens on
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: traefik
+  host: ""             # e.g. my-app.local
+  path: /
+  pathType: Prefix
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+env: []
+# - name: ENV_VAR
+#   value: "some-value"
+
+configMap:
+  enabled: false
+  data: {}
+# data:
+#   KEY: value
