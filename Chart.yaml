@@ -1,0 +1,5 @@
+apiVersion: v2
+name: nautilus
+description: Generic reusable Helm chart for deploying any web application
+type: application
+version: 0.2.0
