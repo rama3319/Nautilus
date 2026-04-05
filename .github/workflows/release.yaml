@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - 'Chart.yaml'
-      - 'templates/**'
-      - 'values.yaml'
+      - 'nautilus/Chart.yaml'
+      - 'nautilus/templates/**'
+      - 'nautilus/values.yaml'
 
 jobs:
   release:
@@ -26,15 +26,9 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
 
-      - name: Package chart
-        run: |
-          mkdir -p .cr-release-packages
-          helm package . --destination .cr-release-packages
-
-      - name: Upload chart to GitHub Releases
+      - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         with:
-          skip_packaging: true
           charts_dir: .
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
