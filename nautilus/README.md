@@ -1,21 +1,28 @@
-# Nautilus
+# Nautilus Helm Chart
 
-A generic reusable Helm chart for deploying any web application. It provides standard Kubernetes resources (Deployment, Service, Ingress, ConfigMap) that any team can use without writing their own templates.
+A generic reusable Helm chart for deploying any web application without writing Kubernetes templates.
 
-## What it creates
+## Helm Repo
 
-| Resource | Always created | Condition |
-|----------|---------------|-----------|
-| Deployment | yes | — |
-| Service | yes | — |
-| Ingress | no | `ingress.enabled: true` |
-| ConfigMap | no | `configMap.enabled: true` |
+```bash
+helm repo add nautilus https://rama3319.github.io/Nautilus
+helm repo update
+```
+
+## Resources
+
+| Resource | Created | Condition |
+|----------|---------|-----------|
+| Deployment | always | |
+| Service | always | |
+| Ingress | optional | `ingress.enabled: true` |
+| ConfigMap | optional | `configMap.enabled: true` |
 
 ---
 
-## How to use Nautilus in your app
+## Usage
 
-### Step 1 — Reference Nautilus as a dependency in your `Chart.yaml`
+### 1. Add as a dependency in `Chart.yaml`
 
 ```yaml
 apiVersion: v2
@@ -23,23 +30,23 @@ name: my-app
 version: 0.1.0
 dependencies:
   - name: nautilus
-    version: "0.1.0"
-    repository: "http://chartmuseum.chartmuseum.svc.cluster.local:8080"
+    version: "0.4.0"
+    repository: "https://rama3319.github.io/Nautilus"
     alias: app
 ```
 
-> The `alias: app` means all Nautilus values are namespaced under `app:` in your `values.yaml`.
+> `alias: app` namespaces all Nautilus values under `app:` in your `values.yaml`
 
-### Step 2 — Override values in your `values.yaml`
+### 2. Configure in `values.yaml`
 
 ```yaml
 app:
   app:
-    name: my-app
+    name: my-app              # required
   image:
-    repository: nginx
-    tag: "1.27"
-  replicaCount: 2
+    repository: nginx         # required
+    tag: "1.27"               # required
+  replicaCount: 1
   containerPort: 80
   service:
     type: ClusterIP
@@ -48,8 +55,6 @@ app:
     enabled: true
     className: traefik
     host: my-app.local
-    path: /
-    pathType: Prefix
   resources:
     requests:
       cpu: 50m
@@ -59,7 +64,7 @@ app:
       memory: 128Mi
 ```
 
-### Step 3 — Pull the dependency and install
+### 3. Install
 
 ```bash
 helm dependency update .
@@ -68,40 +73,37 @@ helm install my-app .
 
 ---
 
-## Values reference
+## Values Reference
 
-| Key | Required | Description |
-|-----|----------|-------------|
-| `app.name` | yes | Name used for all Kubernetes resources |
-| `image.repository` | yes | Container image repository |
-| `image.tag` | yes | Container image tag |
-| `image.pullPolicy` | no | Default: `IfNotPresent` |
-| `replicaCount` | no | Default: `1` |
-| `containerPort` | no | Port the container listens on. Default: `80` |
-| `service.type` | no | `ClusterIP`, `NodePort`, `LoadBalancer`. Default: `ClusterIP` |
-| `service.port` | no | Default: `80` |
-| `ingress.enabled` | no | Default: `false` |
-| `ingress.className` | no | Default: `traefik` |
-| `ingress.host` | no | Hostname for the ingress rule |
-| `configMap.enabled` | no | Default: `false` |
-| `configMap.data` | no | Key-value pairs injected as env vars |
-| `env` | no | List of `name/value` env vars |
-| `resources` | no | CPU/memory requests and limits |
+| Key | Required | Default | Description |
+|-----|----------|---------|-------------|
+| `app.name` | yes | | Name for all Kubernetes resources |
+| `image.repository` | yes | | Container image |
+| `image.tag` | yes | | Image tag |
+| `image.pullPolicy` | no | `IfNotPresent` | |
+| `replicaCount` | no | `1` | Number of replicas |
+| `containerPort` | no | `80` | Port the container listens on |
+| `service.type` | no | `ClusterIP` | `ClusterIP`, `NodePort`, `LoadBalancer` |
+| `service.port` | no | `80` | |
+| `ingress.enabled` | no | `false` | |
+| `ingress.className` | no | `traefik` | |
+| `ingress.host` | no | | Hostname for ingress rule |
+| `configMap.enabled` | no | `false` | |
+| `configMap.data` | no | | Key-value pairs injected as env vars |
+| `env` | no | `[]` | List of `name/value` env vars |
 
 ---
 
-## Passing environment variables
+## Environment Variables
 
 ```yaml
 app:
   env:
     - name: DB_HOST
       value: "postgres:5432"
-    - name: APP_ENV
-      value: "production"
 ```
 
-## Passing config via ConfigMap
+## ConfigMap
 
 ```yaml
 app:
@@ -111,3 +113,11 @@ app:
       DB_HOST: postgres:5432
       APP_ENV: production
 ```
+
+---
+
+## Releasing a New Version
+
+1. Bump `version` in `Chart.yaml`
+2. Push to `main`
+3. GitHub Actions packages and publishes the release automatically
